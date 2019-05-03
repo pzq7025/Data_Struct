@@ -4,7 +4,6 @@
 import json
 from collections import defaultdict
 from heapq import *
-import queue
 
 
 def get_node_information():
@@ -95,27 +94,39 @@ def get_array(number):
     return dimensional
 
 
-def dfs(number):
+def get_path_dict():
     """
-    achieve dfs to search all of the path
+    将一个点相关的边存在一个集合中 来完成对数据的操作
     :return:
     """
-    length = len(get_array(0))
-    array_info = get_array(0)
-    print(array_info)
-    exit()
-    sort_list = [number]
-    for j in range(7):
-        i = 0
-        for i in range(length - 1):
-            if array_info[number][i] != 0 and i not in sort_list:
-                sort_list.append(i)
-            else:
-                i += 1
-        number = i
-        if len(sort_list) == 8:
-            break
-    print(sort_list)
+    search = []
+    node = get_edge_information()
+    for one in node.items():
+        element = set()
+        for x in one[1].keys():
+            # 将所有的点设置成一个集合
+            element.add(int(x))
+        search.append(element)
+    return search
+
+
+def dfs_iter(v):
+    """
+    深度优先得出路径结果
+    :param v:
+    :return:
+    """
+    g = get_path_dict()
+    visited = set()
+    result = []
+    s = [v]
+    while s:
+        u = s.pop()
+        if u not in visited:
+            result.append(u)
+            visited.add(u)
+            s.extend(g[u])
+    return result
 
 
 def dijkstra_raw(edges, from_node, to_node):
@@ -224,8 +235,6 @@ def kruskal():
         candidate_node.remove(end)
     return res
 
-
-dfs(2)
 # prim()
 # get_array()
 # get_node_information()

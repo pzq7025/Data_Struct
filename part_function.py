@@ -80,7 +80,16 @@ def scenery_navigation():
             elif num == -1:
                 break
             else:
-                print()
+                result = dfs_iter(num)
+                search = query_dictionary()
+                print("路线结果：")
+                for one in result:
+                    for key in search.items():
+                        # 美化输出
+                        if key[0] == str(one) and result.index(one) != len(result) - 1:
+                            print("{}——>".format(key[1]), end='')
+                        if key[0] == str(one) and result.index(one) == len(result) - 1:
+                            print(key[1])
         except Exception as e:
             _ = e.__cause__
             print("输入错误！请重新尝试！")
