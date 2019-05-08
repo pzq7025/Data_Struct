@@ -6,6 +6,7 @@ from collections import defaultdict
 from heapq import *
 
 
+# ============================================== 第一部分内容 ==========================================
 def get_node_information():
     """
     顶点信息  相关连的节点信息
@@ -42,6 +43,7 @@ def get_edge_information():
         return result
 
 
+# ======================================= 第二部分内容 =========================================
 def query_dictionary():
     """
     构建出节点和节点的关系
@@ -74,6 +76,7 @@ def query_scenery_menu():
             for x in one[1].items():
                 for key in search.items():
                     if x[0] == key[0]:
+                        # key[0]是对应的编号  key[1]是对应的区域  x[1]是距离
                         print(key[0], key[1], x[1])
 
 
@@ -94,41 +97,112 @@ def get_array(number):
     return dimensional
 
 
-def get_path_dict():
+# ================================================= 第三部分内容 深度优先的算法 ===============================
+# def get_path_dict():
+#     """
+#     将一个点相关的边存在一个集合中 来完成对数据的操作
+#     :return:
+#     """
+#     search = []
+#     node = get_edge_information()
+#     for one in node.items():
+#         element = set()
+#         for x in one[1].keys():
+#             # 将所有的点设置成一个集合
+#             element.add(int(x))
+#         search.append(element)
+#     return search
+#
+#
+# def dfs_iter(v):
+#     """
+#     深度优先得出路径结果
+#     :param v:开始的位置
+#     :return: 结果集
+#     """
+#     g = get_path_dict()
+#     visited = set()
+#     result = []
+#     s = [v]
+#     while s:
+#         u = s.pop()
+#         if u not in visited:
+#             result.append(u)
+#             visited.add(u)
+#             s.extend(g[u])
+#     return result
+
+
+def get_path_dict_s():
     """
     将一个点相关的边存在一个集合中 来完成对数据的操作
     :return:
     """
-    search = []
+    search = {}
     node = get_edge_information()
     for one in node.items():
-        element = set()
-        for x in one[1].keys():
+        nodes = []
+        for x in one[1].items():
             # 将所有的点设置成一个集合
-            element.add(int(x))
-        search.append(element)
+            # for result in one[1].items():
+            # search.update({one[0]: x[0]})
+            nodes.append(x[0])
+        search.update({one[0]: nodes})
     return search
 
 
-def dfs_iter(v):
-    """
-    深度优先得出路径结果
-    :param v:
-    :return:
-    """
-    g = get_path_dict()
-    visited = set()
-    result = []
-    s = [v]
-    while s:
-        u = s.pop()
-        if u not in visited:
-            result.append(u)
-            visited.add(u)
-            s.extend(g[u])
-    return result
+def find_all_path(graph, start, end, path=None):
+    if path is None:
+        path = []
+    path = path + [start]
+    if start == end:
+        return [path]
+
+    paths = []  # 存储所有路径
+    for node in graph[start]:
+        if node not in path:
+            new_paths = find_all_path(graph, node, end, path)
+            for new_path in new_paths:
+                if new_path.__len__() == all_().__len__():
+                    paths.append(new_path)
+    return paths
 
 
+def all_():
+    g = get_path_dict_s()
+    all_path = []
+    for n in g.items():
+        all_path.append(n[0])
+    return all_path
+
+
+def dfs(number):
+    g = get_path_dict_s()
+    results = []
+    for n in g.items():
+        result = find_all_path(g, str(number), n[0])
+        for result_one in result:
+            if result_one.__len__() == all_().__len__():
+                results.append(result_one)
+    # print(results)
+    return results
+    # s = get_array(False)
+    # path = [number]
+    # for i in range(len(s)):
+    #     for one in range(len(s[i])):
+    #         if one is not False and one not in path:
+    #             path.append(one)
+    # print(path)
+
+
+dfs(2)
+
+
+# print(dfs_iter(2))
+# print(dfs_iter(2))
+
+
+# ========================================= dijstra算法的内容 ======================================================
 def dijkstra_raw(edges, from_node, to_node):
     """
     将节点信息和边进行比较获取正确的边集
@@ -202,9 +276,10 @@ def get_shortest_path(start_node, end_node):
     return dijkstra(edges_list, start_node, end_node)
 
 
+# ========================================================== kruskal算法的内容 ============================================
 def kruskal():
     """
-    prim 算法
+    kruskal 算法
     """
     dimensional = get_array(9999)
     node_num = len(dimensional)

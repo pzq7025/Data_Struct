@@ -4,6 +4,7 @@
 from graph import *
 
 
+# ======================================= 第一部分 ========================================
 def create_scenery():
     """
     创建景区景点图
@@ -16,12 +17,16 @@ def create_scenery():
         print(f"{one[0]}-{''.join([x for x in one[1].keys()])}")
 
     edge = get_edge_information()
+    store_list = []
     print("----------------边----------------------")
     for one in edge.items():
         for key in one[1].items():
-            print(f"<v{one[0]},v{key[0]}> {key[1]}")
+            if (key[0], one[0]) not in store_list:
+                print(f"<v{one[0]},v{key[0]}> {key[1]}")
+                store_list.append((one[0], key[0]))
 
 
+# ====================================== 第二部分 ==============================================
 def query_scenery():
     """
     查询景区 景点信息
@@ -62,6 +67,7 @@ def query_scenery():
             print("输入错误！请重新尝试！")
 
 
+# ================================================= 第三部分 =======================================
 def scenery_navigation():
     """
     创建景区导航
@@ -74,27 +80,30 @@ def scenery_navigation():
         print(f"{one[0]}-{''.join([x for x in one[1].keys()])}")
     while True:
         try:
-            num = int(input("请输入起始景点(-1退出查询)："))
+            num = int(input("请输入当前景点位置(-1退出查询)："))
             if num > 6 or num < -1:
                 print("景区不存在！")
             elif num == -1:
                 break
             else:
-                result = dfs_iter(num)
+                result = dfs(num)
                 search = query_dictionary()
-                print("路线结果：")
-                for one in result:
-                    for key in search.items():
-                        # 美化输出
-                        if key[0] == str(one) and result.index(one) != len(result) - 1:
-                            print("{}——>".format(key[1]), end='')
-                        if key[0] == str(one) and result.index(one) == len(result) - 1:
-                            print(key[1])
+                # print("路线结果：")
+                for one in range(len(result)):
+                    print(f"第{one + 1}条路径：")
+                    for i in result[one]:
+                        for key in search.items():
+                            # 美化输出
+                            if key[0] == str(i) and result[one].index(i) != len(result[one]) - 1:
+                                print("{}——>".format(key[1]), end='')
+                            if key[0] == str(i) and result[one].index(i) == len(result[one]) - 1:
+                                print(key[1])
         except Exception as e:
             _ = e.__cause__
             print("输入错误！请重新尝试！")
 
 
+# ======================================== 第四部分 ========================================
 def search_path():
     """
     搜索最短路径
@@ -132,6 +141,7 @@ def search_path():
             print("输入错误！请重新尝试！")
 
 
+# ========================================== 第五部分 ======================================
 def pave_ruler():
     """
     铺设电路规则
